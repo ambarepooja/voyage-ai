@@ -32,7 +32,7 @@ class Settings(BaseSettings):
     # API Keys
     GEMINI_API_KEY: str = ""
 
-    # Email / SMTP
+    # Email / SMTP & Cloud APIs
     SMTP_TLS: bool = True
     SMTP_PORT: int = 587
     SMTP_HOST: str | None = None
@@ -40,6 +40,8 @@ class Settings(BaseSettings):
     SMTP_PASSWORD: str | None = None
     EMAILS_FROM_EMAIL: str | None = None
     EMAILS_FROM_NAME: str = "Voyage AI"
+    BREVO_API_KEY: str | None = None
+    RESEND_API_KEY: str | None = None
 
     model_config = SettingsConfigDict(env_file=".env", env_ignore_empty=True, extra="ignore")
 
