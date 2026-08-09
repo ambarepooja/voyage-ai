@@ -1,5 +1,6 @@
 import smtplib
 import logging
+import requests
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from app.core.config import settings
@@ -8,8 +9,9 @@ logger = logging.getLogger(__name__)
 
 def send_otp_email(email_to: str, otp_code: str) -> bool:
     """
-    Sends an OTP verification email to the user via SMTP.
-    If SMTP settings are not provided or error occurs, logs details.
+    Sends an OTP verification email to the user.
+    Uses HTTPS API (Port 443) for Brevo/SendGrid to bypass cloud port 587 blocks,
+    and falls back to SMTPS (Port 465) and SMTP (Port 587).
     """
     subject = f"{otp_code} is your Voyage AI verification code"
     
@@ -51,41 +53,69 @@ def send_otp_email(email_to: str, otp_code: str) -> bool:
     user = str(settings.SMTP_USER or '').strip()
     password = str(settings.SMTP_PASSWORD or '').strip()
     from_email = str(settings.EMAILS_FROM_EMAIL or user).strip()
+    from_name = str(settings.EMAILS_FROM_NAME or 'Voyage AI').strip()
     port = int(settings.SMTP_PORT or 587)
-    use_tls = str(settings.SMTP_TLS).lower() in ['true', '1', 'yes', 't']
 
     if not host or not user or not password:
         logger.info(f"SMTP credentials missing. Host: '{host}', User: '{user}'. OTP for {email_to}: {otp_code}")
-        print(f"\n[SMTP WARNING] Host/User/Pass missing. OTP for {email_to}: {otp_code}")
+        print(f"\n[SMTP WARNING] Credentials missing. OTP for {email_to}: {otp_code}")
         return False
 
+    # Method 1: Try Brevo REST API over HTTPS (Port 443 - Never blocked on Render)
+    if "brevo.com" in host.lower() or "sendinblue" in host.lower() or password.startswith("xkeysib-") or password.startswith("4905"):
+        try:
+            headers = {
+                "accept": "application/json",
+                "api-key": password,
+                "content-type": "application/json"
+            }
+            payload = {
+                "sender": {"name": from_name, "email": from_email},
+                "to": [{"email": email_to}],
+                "subject": subject,
+                "htmlContent": html_content,
+                "textContent": text_content
+            }
+            response = requests.post("https://api.brevo.com/v3/smtp/email", json=payload, headers=headers, timeout=10)
+            if response.status_code in [200, 201, 202]:
+                logger.info(f"✅ OTP email delivered via Brevo HTTPS API to {email_to}")
+                print(f"✅ OTP email delivered via Brevo HTTPS API to {email_to}")
+                return True
+            else:
+                logger.warning(f"Brevo API response {response.status_code}: {response.text}")
+                print(f"⚠️ Brevo API response {response.status_code}: {response.text}")
+        except Exception as api_err:
+            logger.warning(f"Brevo API attempt failed: {api_err}. Trying SMTP SSL fallback...")
+
+    # Method 2: Standard SMTPS / SMTP
     msg = MIMEMultipart("alternative")
     msg["Subject"] = subject
-    msg["From"] = f"{settings.EMAILS_FROM_NAME} <{from_email}>"
+    msg["From"] = f"{from_name} <{from_email}>"
     msg["To"] = email_to
-
     msg.attach(MIMEText(text_content, "plain"))
     msg.attach(MIMEText(html_content, "html"))
 
-    try:
-        if port == 465:
-            with smtplib.SMTP_SSL(host, port, timeout=15) as server:
-                server.login(user, password)
-                server.sendmail(from_email, [email_to], msg.as_string())
-        else:
-            with smtplib.SMTP(host, port, timeout=15) as server:
-                server.ehlo()
-                if use_tls:
+    # Try Port 465 (SSL) first if Render blocks 587
+    for target_port, is_ssl in [(465, True), (port, port == 465)]:
+        try:
+            if is_ssl:
+                with smtplib.SMTP_SSL(host, target_port, timeout=10) as server:
+                    server.login(user, password)
+                    server.sendmail(from_email, [email_to], msg.as_string())
+            else:
+                with smtplib.SMTP(host, target_port, timeout=10) as server:
+                    server.ehlo()
                     server.starttls()
                     server.ehlo()
-                server.login(user, password)
-                server.sendmail(from_email, [email_to], msg.as_string())
-        
-        logger.info(f"✅ OTP email successfully dispatched to {email_to}")
-        print(f"✅ OTP email successfully dispatched to {email_to}")
-        return True
-    except Exception as e:
-        logger.error(f"❌ Failed to dispatch OTP email to {email_to}: {e}")
-        print(f"❌ Failed to dispatch OTP email to {email_to}: {e}")
-        print(f"🔑 Live Fallback OTP for {email_to}: {otp_code}")
-        return False
+                    server.login(user, password)
+                    server.sendmail(from_email, [email_to], msg.as_string())
+            
+            logger.info(f"✅ OTP email delivered via SMTP (port {target_port}) to {email_to}")
+            print(f"✅ OTP email delivered via SMTP (port {target_port}) to {email_to}")
+            return True
+        except Exception as smtp_err:
+            logger.warning(f"SMTP port {target_port} failed: {smtp_err}")
+
+    print(f"❌ Failed to dispatch OTP email to {email_to}")
+    print(f"🔑 Live Fallback OTP for {email_to}: {otp_code}")
+    return False
