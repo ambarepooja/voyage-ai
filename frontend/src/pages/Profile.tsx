@@ -27,7 +27,7 @@ import {
   Trash2,
   Image as ImageIcon
 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Button } from '../components/ui/button';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../services/api';
 

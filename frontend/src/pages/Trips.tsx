@@ -21,7 +21,7 @@ import {
   Printer, 
   Compass
 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Button } from '../components/ui/button';
 import { api } from '../services/api';
 import { useNavigate } from 'react-router-dom';
 import { getCurrencyForDestination, formatTripCurrency } from '../utils/currency';

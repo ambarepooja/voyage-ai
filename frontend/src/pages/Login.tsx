@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../services/api';
-import { Button } from '@/components/ui/button';
+import { Button } from '../components/ui/button';
 import { Compass } from 'lucide-react';
 
 export default function Login() {

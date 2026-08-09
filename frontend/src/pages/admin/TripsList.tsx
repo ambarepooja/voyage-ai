@@ -2,7 +2,7 @@ import { useEffect, useState, useMemo } from 'react';
 import { api } from '../../services/api';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Map, Plus, Trash2, Edit, Edit2, Search, Filter, Calendar, DollarSign, X, Check } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Button } from '../../components/ui/button';
 import { UserAvatar } from '../../components/UserAvatar';
 
 export default function TripsList() {

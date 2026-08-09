@@ -2,7 +2,7 @@ import { useEffect, useState, useMemo } from 'react';
 import { api } from '../../services/api';
 import { motion } from 'framer-motion';
 import { KeyRound, Clock, CheckCircle2, AlertCircle, Search, Filter, RefreshCw, Mail, Calendar, ShieldCheck } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Button } from '../../components/ui/button';
 import { UserAvatar } from '../../components/UserAvatar';
 
 export default function OTPsList() {

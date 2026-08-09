@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Send, Bot, User as UserIcon, Sparkles, Copy, Check, Trash2 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Button } from '../components/ui/button';
 import { api } from '../services/api';
 import MarkdownRenderer from '../components/MarkdownRenderer';
 

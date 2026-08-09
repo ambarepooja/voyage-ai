@@ -15,7 +15,7 @@ import {
   QrCode,
   MapPin
 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Button } from '../components/ui/button';
 import { api } from '../services/api';
 import { Link } from 'react-router-dom';
 

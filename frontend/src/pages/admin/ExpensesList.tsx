@@ -2,7 +2,7 @@ import { useEffect, useState, useMemo } from 'react';
 import { api } from '../../services/api';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CreditCard, Trash2, Edit, X, Search, Filter, MapPin } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Button } from '../../components/ui/button';
 import { UserAvatar } from '../../components/UserAvatar';
 
 export default function ExpensesList() {

@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Wallet, PieChart, Utensils, Hotel, Train, Plus, X, Trash2, MapPin, Filter, Globe, AlertTriangle, AlertCircle, Sparkles } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Button } from '../components/ui/button';
 import { api } from '../services/api';
 import { useSearchParams } from 'react-router-dom';
 import { getCurrencyForDestination, formatTripCurrency, DEFAULT_INR, type CurrencyInfo } from '../utils/currency';
