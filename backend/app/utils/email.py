@@ -62,11 +62,12 @@ def send_otp_email(email_to: str, otp_code: str) -> bool:
         return False
 
     # Method 1: Try Brevo REST API over HTTPS (Port 443 - Never blocked on Render)
-    if "brevo.com" in host.lower() or "sendinblue" in host.lower() or password.startswith("xkeysib-") or password.startswith("4905"):
+    api_key = settings.BREVO_API_KEY or (password if (password.startswith("xkeysib-") or "brevo" in host.lower()) else None)
+    if api_key:
         try:
             headers = {
                 "accept": "application/json",
-                "api-key": password,
+                "api-key": api_key,
                 "content-type": "application/json"
             }
             payload = {
