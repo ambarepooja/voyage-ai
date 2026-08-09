@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 def send_otp_email(email_to: str, otp_code: str) -> bool:
     """
     Sends an OTP verification email to the user via SMTP.
-    If SMTP settings are not provided in settings/env, logs the OTP code for local dev/testing.
+    If SMTP settings are not provided or error occurs, logs details.
     """
     subject = f"{otp_code} is your Voyage AI verification code"
     
@@ -33,7 +33,7 @@ def send_otp_email(email_to: str, otp_code: str) -> bool:
             </div>
             
             <p style="color: #a1a1aa; font-size: 13px; line-height: 1.6; margin-bottom: 24px;">
-                Enter this 6-digit code on the verification screen. This code will expire in <strong>15 minutes</strong>.
+                Enter this 6-digit code on the verification screen. This code will expire in <strong>10 minutes</strong>.
             </p>
             
             <hr style="border: none; border-top: 1px solid rgba(255, 255, 255, 0.1); margin: 24px 0;" />
@@ -45,45 +45,47 @@ def send_otp_email(email_to: str, otp_code: str) -> bool:
     </html>
     """
     
-    text_content = f"Your Voyage AI verification code is: {otp_code}. This code expires in 15 minutes."
+    text_content = f"Your Voyage AI verification code is: {otp_code}. This code expires in 10 minutes."
 
-    if not settings.SMTP_HOST or not settings.SMTP_USER or not settings.SMTP_PASSWORD:
-        logger.info(f"SMTP not fully configured. Console OTP for {email_to}: {otp_code}")
-        print(f"\n==================================================")
-        print(f"📧 EMAIL SENDER [To: {email_to}]")
-        print(f"Subject: {subject}")
-        print(f"OTP Code: {otp_code}")
-        print(f"Notice: Configure SMTP_HOST, SMTP_USER, SMTP_PASSWORD in .env for live email delivery.")
-        print(f"==================================================\n")
+    host = str(settings.SMTP_HOST or '').strip()
+    user = str(settings.SMTP_USER or '').strip()
+    password = str(settings.SMTP_PASSWORD or '').strip()
+    from_email = str(settings.EMAILS_FROM_EMAIL or user).strip()
+    port = int(settings.SMTP_PORT or 587)
+    use_tls = str(settings.SMTP_TLS).lower() in ['true', '1', 'yes', 't']
+
+    if not host or not user or not password:
+        logger.info(f"SMTP credentials missing. Host: '{host}', User: '{user}'. OTP for {email_to}: {otp_code}")
+        print(f"\n[SMTP WARNING] Host/User/Pass missing. OTP for {email_to}: {otp_code}")
         return False
 
-    sender_email = settings.EMAILS_FROM_EMAIL or settings.SMTP_USER
-    
     msg = MIMEMultipart("alternative")
     msg["Subject"] = subject
-    msg["From"] = f"{settings.EMAILS_FROM_NAME} <{sender_email}>"
+    msg["From"] = f"{settings.EMAILS_FROM_NAME} <{from_email}>"
     msg["To"] = email_to
 
     msg.attach(MIMEText(text_content, "plain"))
     msg.attach(MIMEText(html_content, "html"))
 
     try:
-        if settings.SMTP_PORT == 465:
-            with smtplib.SMTP_SSL(settings.SMTP_HOST, settings.SMTP_PORT) as server:
-                server.login(settings.SMTP_USER, settings.SMTP_PASSWORD)
-                server.sendmail(sender_email, [email_to], msg.as_string())
+        if port == 465:
+            with smtplib.SMTP_SSL(host, port, timeout=15) as server:
+                server.login(user, password)
+                server.sendmail(from_email, [email_to], msg.as_string())
         else:
-            with smtplib.SMTP(settings.SMTP_HOST, settings.SMTP_PORT) as server:
-                if settings.SMTP_TLS:
+            with smtplib.SMTP(host, port, timeout=15) as server:
+                server.ehlo()
+                if use_tls:
                     server.starttls()
-                server.login(settings.SMTP_USER, settings.SMTP_PASSWORD)
-                server.sendmail(sender_email, [email_to], msg.as_string())
+                    server.ehlo()
+                server.login(user, password)
+                server.sendmail(from_email, [email_to], msg.as_string())
         
-        logger.info(f"OTP email sent successfully to {email_to}")
-        print(f"✅ OTP email sent successfully to {email_to}")
+        logger.info(f"✅ OTP email successfully dispatched to {email_to}")
+        print(f"✅ OTP email successfully dispatched to {email_to}")
         return True
     except Exception as e:
-        logger.error(f"Failed to send OTP email to {email_to}: {e}")
-        print(f"❌ Failed to send OTP email to {email_to}: {e}")
-        print(f"Console fallback OTP for {email_to}: {otp_code}")
+        logger.error(f"❌ Failed to dispatch OTP email to {email_to}: {e}")
+        print(f"❌ Failed to dispatch OTP email to {email_to}: {e}")
+        print(f"🔑 Live Fallback OTP for {email_to}: {otp_code}")
         return False
