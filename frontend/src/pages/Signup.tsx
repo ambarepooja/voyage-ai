@@ -16,7 +16,6 @@ export default function Signup() {
   const [isLoading, setIsLoading] = useState(false);
   const [isOtpStep, setIsOtpStep] = useState(false);
   const [otpCode, setOtpCode] = useState('');
-  const [devOtpHint, setDevOtpHint] = useState<string | null>(null);
   const [timeLeft, setTimeLeft] = useState<number>(600); // 10 minutes TTL in seconds
   const navigate = useNavigate();
   const { login } = useAuth();
@@ -58,18 +57,15 @@ export default function Signup() {
     setIsLoading(true);
     
     try {
-      // 1. Create the user and get OTP via email
-      const res = await api.post('/auth/signup', { 
+      // 1. Create the user and dispatch OTP via email
+      await api.post('/auth/signup', { 
         email, 
         password,
         first_name: firstName,
         last_name: lastName,
         phone_number: phone
       });
-      if (res.data.dev_otp) {
-        setDevOtpHint(res.data.dev_otp);
-        setOtpCode(res.data.dev_otp);
-      }
+      setOtpCode('');
       setTimeLeft(600); // Reset timer to 10 minutes
       setIsOtpStep(true);
     } catch (err: any) {
@@ -111,15 +107,10 @@ export default function Signup() {
     setError('');
     setIsLoading(true);
     try {
-      const res = await api.post('/auth/resend-otp', { email });
+      await api.post('/auth/resend-otp', { email });
+      setOtpCode('');
       setTimeLeft(600); // Reset countdown timer
-      if (res.data.dev_otp) {
-        setDevOtpHint(res.data.dev_otp);
-        setOtpCode(res.data.dev_otp);
-        alert(`Demo Mode: New OTP is ${res.data.dev_otp}`);
-      } else {
-        alert(`A new verification OTP code has been sent to ${email}`);
-      }
+      alert(`A fresh 6-digit verification code has been sent to ${email}. Please check your inbox and spam folder.`);
     } catch (err: any) {
       setError(err.response?.data?.detail || 'Failed to resend OTP.');
     } finally {
@@ -155,15 +146,12 @@ export default function Signup() {
           
           {isOtpStep ? (
             <form onSubmit={handleVerifyOtp} className="space-y-6">
-              {devOtpHint ? (
-                <div className="bg-indigo-500/20 border border-indigo-500/40 text-indigo-200 p-4 rounded-2xl text-sm text-center space-y-1 shadow-lg">
-                  <p className="font-semibold text-white">✨ Testing / Instant Signup Mode</p>
-                  <p className="text-xs text-gray-300">Your OTP Code is <span className="font-mono text-lg font-bold text-indigo-300 underline tracking-widest">{devOtpHint}</span></p>
-                  <p className="text-[11px] text-gray-400">It has been automatically entered below for you!</p>
-                </div>
-              ) : (
-                <p className="text-gray-300 text-center mb-6">We've sent a 6-digit verification code to <strong>{email}</strong>. Please check your inbox and enter the code below.</p>
-              )}
+              <div className="bg-primary/10 border border-primary/20 p-4 rounded-2xl text-center space-y-1">
+                <p className="text-sm font-semibold text-white">📩 Verification Code Sent</p>
+                <p className="text-xs text-gray-300">
+                  We've sent a 6-digit code to <strong className="text-white">{email}</strong>. Check your inbox and spam folder.
+                </p>
+              </div>
 
               {/* Expiry Countdown Timer */}
               <div className="flex items-center justify-between px-4 py-2.5 rounded-2xl bg-black/40 border border-white/10 text-xs">

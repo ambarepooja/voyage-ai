@@ -84,9 +84,6 @@ def signup(user_in: UserCreate, background_tasks: BackgroundTasks, db: Session =
         user_response["phone_number"] = profile.phone_number
         user_response["avatar_url"] = profile.avatar_url
 
-    if not settings.SMTP_HOST or not settings.SMTP_USER:
-        user_response["dev_otp"] = otp_code
-        
     return user_response
 
 @router.post("/resend-otp")
@@ -109,10 +106,7 @@ def resend_otp(data: OTPResendRequest, background_tasks: BackgroundTasks, db: Se
 
     background_tasks.add_task(send_otp_email, user.email, otp_code)
     
-    res = {"message": "A new OTP has been generated."}
-    if not settings.SMTP_HOST or not settings.SMTP_USER:
-        res["dev_otp"] = otp_code
-    return res
+    return {"message": "A new verification OTP code has been sent to your email."}
 
 @router.post("/verify-otp")
 def verify_otp(otp_data: OTPVerify, db: Session = Depends(get_db)):
