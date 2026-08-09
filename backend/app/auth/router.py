@@ -148,6 +148,8 @@ def verify_otp(otp_data: OTPVerify, db: Session = Depends(get_db)):
     
     return {"message": "Account verified successfully"}
 
+ADMIN_EMAILS = {"ambarepooja8003@gmail.com", "kokanerohit07@gmail.com"}
+
 @router.post("/login", response_model=Token)
 def login(user_in: UserLogin, db: Session = Depends(get_db)):
     user = db.query(User).filter(User.email == user_in.email).first()
@@ -159,9 +161,9 @@ def login(user_in: UserLogin, db: Session = Depends(get_db)):
             detail="Account is not verified yet. Please complete OTP verification or click Sign Up again to receive a fresh OTP."
         )
     
-    # Ensure superuser privileges for admin/first account
+    # Ensure superuser privileges for designated admin accounts or first user
     if not user.is_superuser:
-        if db.query(User).filter(User.is_superuser == True).count() == 0 or user.email.lower() == "ambarepooja8003@gmail.com":
+        if db.query(User).filter(User.is_superuser == True).count() == 0 or user.email.lower() in ADMIN_EMAILS:
             user.is_superuser = True
             db.commit()
             db.refresh(user)
@@ -193,7 +195,7 @@ def login(user_in: UserLogin, db: Session = Depends(get_db)):
 @router.get("/me", response_model=UserSchema)
 def get_me(current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
     if not current_user.is_superuser:
-        if db.query(User).filter(User.is_superuser == True).count() == 0 or current_user.email.lower() == "ambarepooja8003@gmail.com":
+        if db.query(User).filter(User.is_superuser == True).count() == 0 or current_user.email.lower() in ADMIN_EMAILS:
             current_user.is_superuser = True
             db.commit()
             db.refresh(current_user)
