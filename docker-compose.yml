@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+      - redis
+    environment:
+      - SQLALCHEMY_DATABASE_URI=postgresql://voyage_user:voyage_password@db:5432/voyage_db
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+
+  db:
+    image: postgres:15-alpine
+    container_name: voyage_ai_db
+    environment:
+      POSTGRES_USER: voyage_user
+      POSTGRES_PASSWORD: voyage_password
+      POSTGRES_DB: voyage_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    container_name: voyage_ai_redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  redis_data:
