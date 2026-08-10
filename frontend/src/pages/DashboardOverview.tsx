@@ -177,11 +177,11 @@ export default function DashboardOverview() {
       : Object.values(categoriesMap).reduce((a, b) => a + b, 0);
 
     const colors: Record<string, string> = {
-      'Accommodation': 'bg-amber-400',
+      'Accommodation': 'bg-amber-500',
       'Transportation': 'bg-primary',
-      'Food & Dining': 'bg-emerald-400',
-      'Activities & Tours': 'bg-purple-400',
-      'General / Other': 'bg-blue-400'
+      'Food & Dining': 'bg-emerald-500',
+      'Activities & Tours': 'bg-purple-500',
+      'General / Other': 'bg-blue-500'
     };
 
     return Object.entries(categoriesMap).map(([name, amount]) => {
@@ -238,7 +238,6 @@ export default function DashboardOverview() {
       if (target) {
         target.value += Number(item.amount || 0);
       } else if (months.length > 0) {
-        // If date falls into current month or ahead
         months[months.length - 1].value += Number(item.amount || 0);
       }
     });
@@ -246,7 +245,7 @@ export default function DashboardOverview() {
     const maxValue = Math.max(...months.map(m => m.value), 1);
 
     return months.map(m => {
-      const heightPercent = m.value > 0 ? Math.max(Math.round((m.value / maxValue) * 100), 12) : 6;
+      const heightPercent = m.value > 0 ? Math.max(Math.round((m.value / maxValue) * 100), 14) : 6;
       return {
         month: m.label,
         value: m.value,
@@ -261,9 +260,9 @@ export default function DashboardOverview() {
       value: trips.length.toString(), 
       subtitle: `${trips.filter(t => t.status === 'completed').length} Completed`, 
       icon: Plane, 
-      color: 'from-blue-600/30 to-cyan-500/20',
+      color: 'from-blue-600/20 to-cyan-500/10 dark:from-blue-600/30 dark:to-cyan-500/20',
       borderColor: 'border-blue-500/30',
-      iconBg: 'bg-blue-500/20 text-blue-400',
+      iconBg: 'bg-blue-500/20 text-blue-500 dark:text-blue-400',
       link: '/dashboard/trips'
     },
     { 
@@ -271,9 +270,9 @@ export default function DashboardOverview() {
       value: formatINR(totalTrackedAmount), 
       subtitle: `${allUserExpenses.length} Records tracked`, 
       icon: Wallet, 
-      color: 'from-emerald-600/30 to-teal-500/20',
+      color: 'from-emerald-600/20 to-teal-500/10 dark:from-emerald-600/30 dark:to-teal-500/20',
       borderColor: 'border-emerald-500/30',
-      iconBg: 'bg-emerald-500/20 text-emerald-400',
+      iconBg: 'bg-emerald-500/20 text-emerald-500 dark:text-emerald-400',
       link: '/dashboard/expenses'
     },
     { 
@@ -281,9 +280,9 @@ export default function DashboardOverview() {
       value: activeFlightsCount.toString(), 
       subtitle: `${activeFlightsCount} Boarding passes generated`, 
       icon: QrCode, 
-      color: 'from-purple-600/30 to-pink-500/20',
+      color: 'from-purple-600/20 to-pink-500/10 dark:from-purple-600/30 dark:to-pink-500/20',
       borderColor: 'border-purple-500/30',
-      iconBg: 'bg-purple-500/20 text-purple-400',
+      iconBg: 'bg-purple-500/20 text-purple-500 dark:text-purple-400',
       link: '/dashboard/flights'
     },
     { 
@@ -291,9 +290,9 @@ export default function DashboardOverview() {
       value: activeHotelsCount.toString(), 
       subtitle: `${activeHotelsCount} Confirmed reservations`, 
       icon: Hotel, 
-      color: 'from-amber-600/30 to-orange-500/20',
+      color: 'from-amber-600/20 to-orange-500/10 dark:from-amber-600/30 dark:to-orange-500/20',
       borderColor: 'border-amber-500/30',
-      iconBg: 'bg-amber-500/20 text-amber-400',
+      iconBg: 'bg-amber-500/20 text-amber-500 dark:text-amber-400',
       link: '/dashboard/hotels'
     },
   ];
@@ -301,15 +300,15 @@ export default function DashboardOverview() {
   return (
     <div className="space-y-10 pb-12">
       {/* Header with Quick Actions */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-white/10 pb-6">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-slate-200 dark:border-white/10 pb-6">
         <div>
           <div className="flex items-center gap-3">
-            <h1 className="text-3xl font-extrabold text-white tracking-tight">Travel Command Center</h1>
-            <span className="px-3 py-1 rounded-full text-xs font-bold bg-primary/20 text-primary border border-primary/30 flex items-center gap-1">
+            <h1 className="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">Travel Command Center</h1>
+            <span className="px-3 py-1 rounded-full text-xs font-bold bg-primary/15 text-primary border border-primary/30 flex items-center gap-1">
               <Sparkles className="w-3.5 h-3.5" /> AI Powered
             </span>
           </div>
-          <p className="text-gray-400 text-sm mt-1">Real-time overview of your itineraries, flight boarding passes, luxury stays, and travel ledger.</p>
+          <p className="text-slate-500 dark:text-gray-400 text-sm mt-1">Real-time overview of your itineraries, flight boarding passes, luxury stays, and travel ledger.</p>
         </div>
 
         <div className="flex items-center gap-3">
@@ -319,8 +318,8 @@ export default function DashboardOverview() {
             </Button>
           </Link>
           <Link to="/dashboard/flights">
-            <Button className="bg-white/10 hover:bg-white/20 text-white border border-white/15 rounded-2xl px-5 font-bold">
-              <Plane className="w-4 h-4 mr-1.5" /> Book Flights
+            <Button className="bg-slate-100 hover:bg-slate-200 dark:bg-white/10 dark:hover:bg-white/20 text-slate-800 dark:text-white border border-slate-200 dark:border-white/15 rounded-2xl px-5 font-bold">
+              <Plane className="w-4 h-4 mr-1.5 text-primary" /> Book Flights
             </Button>
           </Link>
         </div>
@@ -334,18 +333,18 @@ export default function DashboardOverview() {
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: idx * 0.06 }}
-              className={`bg-gradient-to-br ${stat.color} border ${stat.borderColor} p-6 rounded-3xl backdrop-blur-xl shadow-xl hover:scale-[1.02] transition-all cursor-pointer relative overflow-hidden group`}
+              className={`bg-gradient-to-br ${stat.color} bg-white dark:bg-transparent border ${stat.borderColor} p-6 rounded-3xl backdrop-blur-xl shadow-lg shadow-slate-200/50 dark:shadow-none hover:scale-[1.02] transition-all cursor-pointer relative overflow-hidden group`}
             >
               <div className="flex items-center justify-between mb-4">
-                <div className={`p-3 rounded-2xl ${stat.iconBg} border border-white/10`}>
+                <div className={`p-3 rounded-2xl ${stat.iconBg} border border-slate-200/40 dark:border-white/10 shadow-sm`}>
                   <stat.icon className="w-6 h-6" />
                 </div>
-                <ArrowUpRight className="w-5 h-5 text-gray-400 group-hover:text-white transition-colors" />
+                <ArrowUpRight className="w-5 h-5 text-slate-400 dark:text-gray-400 group-hover:text-primary transition-colors" />
               </div>
 
-              <p className="text-xs font-semibold uppercase tracking-wider text-gray-300">{stat.label}</p>
-              <p className="text-3xl font-black text-white mt-1 tracking-tight">{isLoading ? '...' : stat.value}</p>
-              <p className="text-xs text-gray-300 mt-2 font-medium">{stat.subtitle}</p>
+              <p className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-gray-300">{stat.label}</p>
+              <p className="text-3xl font-black text-slate-900 dark:text-white mt-1 tracking-tight">{isLoading ? '...' : stat.value}</p>
+              <p className="text-xs text-slate-500 dark:text-gray-300 mt-2 font-medium">{stat.subtitle}</p>
             </motion.div>
           </Link>
         ))}
@@ -357,50 +356,50 @@ export default function DashboardOverview() {
         <motion.div
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
-          className="lg:col-span-2 bg-white/5 border border-white/10 p-6 rounded-3xl backdrop-blur-xl shadow-xl flex flex-col justify-between"
+          className="lg:col-span-2 bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 p-6 rounded-3xl backdrop-blur-xl shadow-lg shadow-slate-200/40 dark:shadow-none flex flex-col justify-between"
         >
           <div>
             <div className="flex justify-between items-center mb-6">
               <div className="flex items-center gap-3">
-                <div className="p-2.5 bg-emerald-500/20 text-emerald-400 rounded-xl border border-emerald-500/30">
+                <div className="p-2.5 bg-emerald-500/15 text-emerald-500 dark:text-emerald-400 rounded-2xl border border-emerald-500/30">
                   <TrendingUp className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 className="text-lg font-bold text-white">Monthly Booking Volume & Travel Growth</h3>
-                  <p className="text-xs text-gray-400">Calculated from actual flights, hotels, and ledger expenses</p>
+                  <h3 className="text-lg font-bold text-slate-900 dark:text-white">Monthly Booking Volume & Travel Growth</h3>
+                  <p className="text-xs text-slate-500 dark:text-gray-400">Calculated from actual flights, hotels, and ledger expenses</p>
                 </div>
               </div>
 
-              <span className="text-xs font-extrabold text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20">
+              <span className="text-xs font-extrabold text-emerald-500 dark:text-emerald-400 bg-emerald-500/15 px-3 py-1 rounded-full border border-emerald-500/20">
                 Live Data
               </span>
             </div>
 
             {/* Dynamic Calculated Bar Chart */}
-            <div className="h-52 w-full flex items-end justify-between gap-3 pt-6 px-2 border-b border-white/10">
+            <div className="h-52 w-full flex items-end justify-between gap-3 pt-6 px-2 border-b border-slate-200 dark:border-white/10">
               {monthlyTrends.map((bar, i) => (
                 <div key={i} className="flex-1 flex flex-col items-center gap-2 group h-full justify-end">
-                  <span className="text-[11px] font-extrabold text-emerald-400 opacity-90 transition-opacity whitespace-nowrap">
+                  <span className="text-[11px] font-extrabold text-emerald-600 dark:text-emerald-400 opacity-90 transition-opacity whitespace-nowrap">
                     {bar.value > 0 ? formatINR(bar.value) : '₹0'}
                   </span>
                   
                   <div 
-                    className="w-full max-w-[48px] bg-gradient-to-t from-primary/60 to-emerald-400 rounded-t-xl transition-all duration-700 group-hover:brightness-125 shadow-lg relative min-h-[8px]"
+                    className="w-full max-w-[48px] bg-gradient-to-t from-primary/60 to-emerald-400 rounded-t-xl transition-all duration-700 group-hover:brightness-125 shadow-md relative min-h-[8px]"
                     style={{ height: bar.height }}
                   >
                     {bar.value > 0 && (
                       <div className="absolute inset-0 bg-white/20 rounded-t-xl animate-pulse" />
                     )}
                   </div>
-                  <span className="text-xs font-semibold text-gray-400 mt-2 text-center">{bar.month}</span>
+                  <span className="text-xs font-bold text-slate-500 dark:text-gray-400 mt-2 text-center">{bar.month}</span>
                 </div>
               ))}
             </div>
           </div>
 
-          <div className="flex justify-between items-center pt-4 text-xs text-gray-400 border-t border-white/5 mt-4">
+          <div className="flex justify-between items-center pt-4 text-xs text-slate-500 dark:text-gray-400 border-t border-slate-100 dark:border-white/5 mt-4">
             <span>Aggregated Travel Spend & Volume:</span>
-            <span className="text-white font-extrabold text-sm">{formatINR(totalTrackedAmount)}</span>
+            <span className="text-slate-900 dark:text-white font-extrabold text-sm">{formatINR(totalTrackedAmount)}</span>
           </div>
         </motion.div>
 
@@ -408,29 +407,29 @@ export default function DashboardOverview() {
         <motion.div
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-white/5 border border-white/10 p-6 rounded-3xl backdrop-blur-xl shadow-xl flex flex-col justify-between"
+          className="bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 p-6 rounded-3xl backdrop-blur-xl shadow-lg shadow-slate-200/40 dark:shadow-none flex flex-col justify-between"
         >
           <div>
             <div className="flex items-center gap-3 mb-4">
-              <div className="p-2.5 bg-purple-500/20 text-purple-400 rounded-xl border border-purple-500/30">
+              <div className="p-2.5 bg-purple-500/15 text-purple-500 dark:text-purple-400 rounded-2xl border border-purple-500/30">
                 <BarChart3 className="w-5 h-5" />
               </div>
               <div>
-                <h3 className="text-lg font-bold text-white">Expense Categories</h3>
-                <p className="text-xs text-gray-400">Real percentage distribution across categories</p>
+                <h3 className="text-lg font-bold text-slate-900 dark:text-white">Expense Categories</h3>
+                <p className="text-xs text-slate-500 dark:text-gray-400">Real percentage distribution across categories</p>
               </div>
             </div>
 
             <div className="space-y-4 my-6">
               {categoryStats.map((c) => (
                 <div key={c.name}>
-                  <div className="flex justify-between text-xs font-semibold text-gray-300 mb-1">
+                  <div className="flex justify-between text-xs font-semibold text-slate-700 dark:text-gray-300 mb-1">
                     <span>{c.name}</span>
-                    <span className="text-gray-400 font-mono">
+                    <span className="text-slate-500 dark:text-gray-400 font-mono font-bold">
                       {c.amount > 0 ? `${formatINR(c.amount)} (${c.percent}%)` : '₹0 (0%)'}
                     </span>
                   </div>
-                  <div className="w-full h-2.5 rounded-full bg-white/10 overflow-hidden">
+                  <div className="w-full h-2.5 rounded-full bg-slate-100 dark:bg-white/10 overflow-hidden">
                     <div 
                       className={`h-full ${c.color} rounded-full transition-all duration-700`} 
                       style={{ width: `${Math.max(c.percent, c.amount > 0 ? 5 : 0)}%` }} 
@@ -440,16 +439,16 @@ export default function DashboardOverview() {
               ))}
 
               {totalTrackedAmount === 0 && (
-                <p className="text-[11px] text-gray-500 text-center py-2 italic">
+                <p className="text-[11px] text-slate-400 dark:text-gray-500 text-center py-2 italic">
                   No user expenses recorded yet. As you log costs and book travel, category progress bars will compute dynamically.
                 </p>
               )}
             </div>
           </div>
 
-          <div className="p-3.5 rounded-2xl bg-black/40 border border-white/5 flex items-center justify-between text-xs">
-            <span className="text-gray-400">Total Tracked Ledger:</span>
-            <span className="text-emerald-400 font-extrabold">{formatINR(totalTrackedAmount)}</span>
+          <div className="p-3.5 rounded-2xl bg-slate-100 dark:bg-black/40 border border-slate-200 dark:border-white/5 flex items-center justify-between text-xs">
+            <span className="text-slate-600 dark:text-gray-400 font-medium">Total Tracked Ledger:</span>
+            <span className="text-emerald-600 dark:text-emerald-400 font-extrabold">{formatINR(totalTrackedAmount)}</span>
           </div>
         </motion.div>
       </div>
@@ -461,41 +460,41 @@ export default function DashboardOverview() {
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="bg-gradient-to-br from-blue-900/30 via-black to-cyan-900/20 border border-white/15 p-6 rounded-3xl backdrop-blur-xl shadow-xl relative overflow-hidden"
+          className="bg-white dark:bg-gradient-to-br dark:from-blue-900/30 dark:via-black dark:to-cyan-900/20 border border-slate-200 dark:border-white/15 p-6 rounded-3xl backdrop-blur-xl shadow-lg shadow-slate-200/50 dark:shadow-none relative overflow-hidden"
         >
           <div className="flex justify-between items-start mb-6">
             <div className="flex items-center gap-3">
-              <div className="p-3 bg-cyan-500/20 text-cyan-400 rounded-2xl border border-cyan-500/30">
+              <div className="p-3 bg-cyan-500/15 text-cyan-500 dark:text-cyan-400 rounded-2xl border border-cyan-500/30">
                 <CloudSun className="w-6 h-6" />
               </div>
               <div>
-                <h3 className="text-lg font-bold text-white">Destination Weather & Climate</h3>
-                <p className="text-xs text-gray-400">Live 5-day forecast for your top journeys</p>
+                <h3 className="text-lg font-bold text-slate-900 dark:text-white">Destination Weather & Climate</h3>
+                <p className="text-xs text-slate-500 dark:text-gray-400">Live 5-day forecast for your top journeys</p>
               </div>
             </div>
-            <span className="text-xs font-bold bg-cyan-500/20 text-cyan-300 px-3 py-1 rounded-full border border-cyan-500/30">
+            <span className="text-xs font-bold bg-cyan-500/15 text-cyan-600 dark:text-cyan-300 px-3 py-1 rounded-full border border-cyan-500/30">
               Live Feed
             </span>
           </div>
 
           <div className="grid grid-cols-3 sm:grid-cols-5 gap-2 text-center my-4">
             {[
-              { day: 'Mon', temp: '29°C', desc: 'Sunny', icon: Sun, color: 'text-amber-400' },
-              { day: 'Tue', temp: '28°C', desc: 'Pleasant', icon: CloudSun, color: 'text-cyan-400' },
-              { day: 'Wed', temp: '26°C', desc: 'Light Rain', icon: CloudRain, color: 'text-blue-400' },
-              { day: 'Thu', temp: '30°C', desc: 'Clear', icon: Sun, color: 'text-amber-400' },
-              { day: 'Fri', temp: '27°C', desc: 'Breeze', icon: CloudSun, color: 'text-cyan-400' },
+              { day: 'Mon', temp: '29°C', desc: 'Sunny', icon: Sun, color: 'text-amber-500' },
+              { day: 'Tue', temp: '28°C', desc: 'Pleasant', icon: CloudSun, color: 'text-cyan-500' },
+              { day: 'Wed', temp: '26°C', desc: 'Light Rain', icon: CloudRain, color: 'text-blue-500' },
+              { day: 'Thu', temp: '30°C', desc: 'Clear', icon: Sun, color: 'text-amber-500' },
+              { day: 'Fri', temp: '27°C', desc: 'Breeze', icon: CloudSun, color: 'text-cyan-500' },
             ].map((w, i) => (
-              <div key={i} className="bg-black/40 border border-white/5 rounded-2xl p-3">
-                <p className="text-xs text-gray-400 font-bold">{w.day}</p>
+              <div key={i} className="bg-slate-50 dark:bg-black/40 border border-slate-200 dark:border-white/5 rounded-2xl p-3">
+                <p className="text-xs text-slate-500 dark:text-gray-400 font-bold">{w.day}</p>
                 <w.icon className={`w-6 h-6 mx-auto my-2 ${w.color}`} />
-                <p className="text-sm font-black text-white">{w.temp}</p>
-                <p className="text-[10px] text-gray-400">{w.desc}</p>
+                <p className="text-sm font-black text-slate-900 dark:text-white">{w.temp}</p>
+                <p className="text-[10px] text-slate-400 dark:text-gray-400">{w.desc}</p>
               </div>
             ))}
           </div>
 
-          <p className="text-xs text-cyan-200/80 bg-cyan-950/40 border border-cyan-500/20 rounded-xl p-3 mt-4">
+          <p className="text-xs text-cyan-800 dark:text-cyan-200/80 bg-cyan-50 dark:bg-cyan-950/40 border border-cyan-200 dark:border-cyan-500/20 rounded-2xl p-3 mt-4">
             💡 <strong>Travel Tip:</strong> Warm afternoons with cooling sea breeze in the evening. Recommended: light cottons & UV sunglasses.
           </p>
         </motion.div>
@@ -505,19 +504,19 @@ export default function DashboardOverview() {
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.25 }}
-          className="bg-gradient-to-br from-emerald-900/30 via-black to-teal-900/20 border border-white/15 p-6 rounded-3xl backdrop-blur-xl shadow-xl relative overflow-hidden"
+          className="bg-white dark:bg-gradient-to-br dark:from-emerald-900/30 dark:via-black dark:to-teal-900/20 border border-slate-200 dark:border-white/15 p-6 rounded-3xl backdrop-blur-xl shadow-lg shadow-slate-200/50 dark:shadow-none relative overflow-hidden"
         >
           <div className="flex justify-between items-start mb-6">
             <div className="flex items-center gap-3">
-              <div className="p-3 bg-emerald-500/20 text-emerald-400 rounded-2xl border border-emerald-500/30">
+              <div className="p-3 bg-emerald-500/15 text-emerald-500 dark:text-emerald-400 rounded-2xl border border-emerald-500/30">
                 <Repeat className="w-6 h-6" />
               </div>
               <div>
-                <h3 className="text-lg font-bold text-white">Multi-Currency Live FX Converter</h3>
-                <p className="text-xs text-gray-400">Calculate international travel expenses in real time</p>
+                <h3 className="text-lg font-bold text-slate-900 dark:text-white">Multi-Currency Live FX Converter</h3>
+                <p className="text-xs text-slate-500 dark:text-gray-400">Calculate international travel expenses in real time</p>
               </div>
             </div>
-            <span className="text-xs font-bold bg-emerald-500/20 text-emerald-300 px-3 py-1 rounded-full border border-emerald-500/30">
+            <span className="text-xs font-bold bg-emerald-500/15 text-emerald-600 dark:text-emerald-300 px-3 py-1 rounded-full border border-emerald-500/30">
               Live Rates
             </span>
           </div>
@@ -525,41 +524,41 @@ export default function DashboardOverview() {
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block text-xs font-bold text-gray-400 mb-1">Amount</label>
+                <label className="block text-xs font-bold text-slate-600 dark:text-gray-400 mb-1">Amount</label>
                 <input 
                   type="number"
                   value={amount}
                   onChange={(e) => setAmount(Number(e.target.value))}
-                  className="w-full bg-black/50 border border-white/15 rounded-2xl px-4 py-2.5 text-base font-bold text-white focus:outline-none focus:border-emerald-400"
+                  className="w-full bg-slate-50 dark:bg-black/50 border border-slate-200 dark:border-white/15 rounded-2xl px-4 py-2.5 text-base font-bold text-slate-900 dark:text-white focus:outline-none focus:border-emerald-500"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-gray-400 mb-1">From Currency</label>
+                <label className="block text-xs font-bold text-slate-600 dark:text-gray-400 mb-1">From Currency</label>
                 <select
                   value={fromCurr}
                   onChange={(e) => setFromCurr(e.target.value)}
-                  className="w-full bg-black/50 border border-white/15 rounded-2xl px-4 py-2.5 text-sm font-bold text-white focus:outline-none cursor-pointer"
+                  className="w-full bg-slate-50 dark:bg-black/50 border border-slate-200 dark:border-white/15 rounded-2xl px-4 py-2.5 text-sm font-bold text-slate-900 dark:text-white focus:outline-none cursor-pointer"
                 >
-                  {Object.keys(FX_RATES).map(c => <option key={c} value={c} className="bg-gray-900">{c}</option>)}
+                  {Object.keys(FX_RATES).map(c => <option key={c} value={c} className="bg-white dark:bg-gray-900 text-slate-900 dark:text-white">{c}</option>)}
                 </select>
               </div>
             </div>
 
-            <div className="p-4 rounded-2xl bg-black/60 border border-white/10 flex items-center justify-between">
+            <div className="p-4 rounded-2xl bg-slate-50 dark:bg-black/60 border border-slate-200 dark:border-white/10 flex items-center justify-between">
               <div>
-                <p className="text-xs text-gray-400 font-semibold">Converted Amount</p>
-                <p className="text-2xl font-black text-emerald-400 mt-0.5">
-                  {convertedValue} <span className="text-sm font-bold text-white">{toCurr}</span>
+                <p className="text-xs text-slate-500 dark:text-gray-400 font-semibold">Converted Amount</p>
+                <p className="text-2xl font-black text-emerald-600 dark:text-emerald-400 mt-0.5">
+                  {convertedValue} <span className="text-sm font-bold text-slate-700 dark:text-white">{toCurr}</span>
                 </p>
               </div>
 
               <select
                 value={toCurr}
                 onChange={(e) => setToCurr(e.target.value)}
-                className="bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 rounded-xl px-3 py-2 text-xs font-bold focus:outline-none cursor-pointer"
+                className="bg-emerald-500/15 border border-emerald-500/30 text-emerald-600 dark:text-emerald-300 rounded-xl px-3 py-2 text-xs font-bold focus:outline-none cursor-pointer"
               >
-                {Object.keys(FX_RATES).map(c => <option key={c} value={c} className="bg-gray-900">{c}</option>)}
+                {Object.keys(FX_RATES).map(c => <option key={c} value={c} className="bg-white dark:bg-gray-900 text-slate-900 dark:text-white">{c}</option>)}
               </select>
             </div>
           </div>
@@ -568,41 +567,41 @@ export default function DashboardOverview() {
 
       {/* Quick Navigation Cards */}
       <div className="space-y-4">
-        <h2 className="text-xl font-bold text-white">Travel Modules & Utilities</h2>
+        <h2 className="text-xl font-bold text-slate-900 dark:text-white">Travel Modules & Utilities</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <Link to="/dashboard/trips">
-            <div className="bg-white/5 border border-white/10 hover:border-primary/40 p-5 rounded-3xl backdrop-blur-md transition-all hover:bg-white/10 group cursor-pointer">
+            <div className="bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 hover:border-primary/40 p-5 rounded-3xl backdrop-blur-md transition-all hover:bg-slate-50 dark:hover:bg-white/10 shadow-lg shadow-slate-200/40 dark:shadow-none group cursor-pointer">
               <div className="flex items-center gap-3 mb-2">
-                <div className="p-2.5 rounded-2xl bg-blue-500/20 text-blue-400">
+                <div className="p-2.5 rounded-2xl bg-blue-500/15 text-blue-500 dark:text-blue-400">
                   <Compass className="w-5 h-5" />
                 </div>
-                <h3 className="font-bold text-white group-hover:text-primary transition-colors">Day-by-Day Itineraries</h3>
+                <h3 className="font-bold text-slate-900 dark:text-white group-hover:text-primary transition-colors">Day-by-Day Itineraries</h3>
               </div>
-              <p className="text-xs text-gray-400">Build morning, afternoon, and evening activity schedules.</p>
+              <p className="text-xs text-slate-500 dark:text-gray-400">Build morning, afternoon, and evening activity schedules.</p>
             </div>
           </Link>
 
           <Link to="/dashboard/packing">
-            <div className="bg-white/5 border border-white/10 hover:border-primary/40 p-5 rounded-3xl backdrop-blur-md transition-all hover:bg-white/10 group cursor-pointer">
+            <div className="bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 hover:border-primary/40 p-5 rounded-3xl backdrop-blur-md transition-all hover:bg-slate-50 dark:hover:bg-white/10 shadow-lg shadow-slate-200/40 dark:shadow-none group cursor-pointer">
               <div className="flex items-center gap-3 mb-2">
-                <div className="p-2.5 rounded-2xl bg-purple-500/20 text-purple-400">
+                <div className="p-2.5 rounded-2xl bg-purple-500/15 text-purple-500 dark:text-purple-400">
                   <Backpack className="w-5 h-5" />
                 </div>
-                <h3 className="font-bold text-white group-hover:text-primary transition-colors">AI Packing Checklist</h3>
+                <h3 className="font-bold text-slate-900 dark:text-white group-hover:text-primary transition-colors">AI Packing Checklist</h3>
               </div>
-              <p className="text-xs text-gray-400">Weather-adapted gear, tech adapters & document tracking.</p>
+              <p className="text-xs text-slate-500 dark:text-gray-400">Weather-adapted gear, tech adapters & document tracking.</p>
             </div>
           </Link>
 
           <Link to="/dashboard/map">
-            <div className="bg-white/5 border border-white/10 hover:border-primary/40 p-5 rounded-3xl backdrop-blur-md transition-all hover:bg-white/10 group cursor-pointer">
+            <div className="bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 hover:border-primary/40 p-5 rounded-3xl backdrop-blur-md transition-all hover:bg-slate-50 dark:hover:bg-white/10 shadow-lg shadow-slate-200/40 dark:shadow-none group cursor-pointer">
               <div className="flex items-center gap-3 mb-2">
-                <div className="p-2.5 rounded-2xl bg-amber-500/20 text-amber-400">
+                <div className="p-2.5 rounded-2xl bg-amber-500/15 text-amber-500 dark:text-amber-400">
                   <MapPin className="w-5 h-5" />
                 </div>
-                <h3 className="font-bold text-white group-hover:text-primary transition-colors">Interactive City Map</h3>
+                <h3 className="font-bold text-slate-900 dark:text-white group-hover:text-primary transition-colors">Interactive City Map</h3>
               </div>
-              <p className="text-xs text-gray-400">Explore landmarks, attractions & saved destinations.</p>
+              <p className="text-xs text-slate-500 dark:text-gray-400">Explore landmarks, attractions & saved destinations.</p>
             </div>
           </Link>
         </div>
