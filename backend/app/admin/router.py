@@ -30,6 +30,8 @@ class AdminUserResponse(BaseModel):
     email: str
     is_active: bool
     is_superuser: bool
+    last_login: Optional[datetime] = None
+    created_at: Optional[datetime] = None
     first_name: Optional[str] = None
     last_name: Optional[str] = None
     phone_number: Optional[str] = None
@@ -43,7 +45,7 @@ def get_all_users(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_superuser)
 ):
-    users = db.query(User).all()
+    users = db.query(User).order_by(User.id.asc()).all()
     result = []
     for u in users:
         profile = db.query(Profile).filter(Profile.user_id == u.id).first()
@@ -52,6 +54,8 @@ def get_all_users(
             "email": u.email,
             "is_active": u.is_active,
             "is_superuser": u.is_superuser,
+            "last_login": u.last_login,
+            "created_at": u.created_at,
             "first_name": profile.first_name if profile else None,
             "last_name": profile.last_name if profile else None,
             "phone_number": profile.phone_number if profile else None,
@@ -602,7 +606,20 @@ def update_user_status(
     user.is_active = status_update.is_active  # type: ignore
     db.commit()
     db.refresh(user)
-    return user
+    
+    profile = db.query(Profile).filter(Profile.user_id == user.id).first()
+    return {
+        "id": user.id,
+        "email": user.email,
+        "is_active": user.is_active,
+        "is_superuser": user.is_superuser,
+        "last_login": user.last_login,
+        "created_at": user.created_at,
+        "first_name": profile.first_name if profile else None,
+        "last_name": profile.last_name if profile else None,
+        "phone_number": profile.phone_number if profile else None,
+        "avatar_url": profile.avatar_url if profile else None
+    }
 
 class UserRoleUpdate(BaseModel):
     is_superuser: bool
@@ -624,4 +641,18 @@ def update_user_role(
     user.is_superuser = role_update.is_superuser  # type: ignore
     db.commit()
     db.refresh(user)
-    return user
+    
+    profile = db.query(Profile).filter(Profile.user_id == user.id).first()
+    return {
+        "id": user.id,
+        "email": user.email,
+        "is_active": user.is_active,
+        "is_superuser": user.is_superuser,
+        "last_login": user.last_login,
+        "created_at": user.created_at,
+        "first_name": profile.first_name if profile else None,
+        "last_name": profile.last_name if profile else None,
+        "phone_number": profile.phone_number if profile else None,
+        "avatar_url": profile.avatar_url if profile else None
+    }
+

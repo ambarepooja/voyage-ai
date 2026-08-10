@@ -1,11 +1,14 @@
 from pydantic import BaseModel, EmailStr
 from typing import Optional
+from datetime import datetime
 
 # Shared properties
 class UserBase(BaseModel):
     email: Optional[EmailStr] = None
     is_active: Optional[bool] = True
     is_superuser: bool = False
+    last_login: Optional[datetime] = None
+    created_at: Optional[datetime] = None
 
 class UserCreate(UserBase):
     email: EmailStr
@@ -33,6 +36,7 @@ class User(UserBase):
 
     class Config:
         from_attributes = True
+
 
 class ProfileUpdate(BaseModel):
     first_name: Optional[str] = None

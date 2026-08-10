@@ -1,7 +1,7 @@
 import { useEffect, useState, useMemo } from 'react';
 import { api } from '../../services/api';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Users, Trash2, Shield, ShieldOff, Power, PowerOff, Search, Filter } from 'lucide-react';
+import { Users, Trash2, Shield, ShieldOff, Power, PowerOff, Search, Filter, Clock } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { UserAvatar } from '../../components/UserAvatar';
 
@@ -70,6 +70,46 @@ export default function UsersList() {
     }
   };
 
+  const formatLoginTime = (dateStr?: string) => {
+    if (!dateStr) return { primary: 'Never Logged In', relative: 'No session yet', isRecent: false };
+    const date = new Date(dateStr);
+    if (isNaN(date.getTime())) return { primary: 'Never Logged In', relative: 'No session yet', isRecent: false };
+
+    const now = new Date();
+    const diffMs = now.getTime() - date.getTime();
+    const diffMins = Math.floor(diffMs / (1000 * 60));
+    const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+    let relative = '';
+    const isRecent = diffMins >= 0 && diffMins < 60;
+
+    if (diffMins < 1) {
+      relative = 'Just now';
+    } else if (diffMins < 60) {
+      relative = `${diffMins}m ago`;
+    } else if (diffHours < 24) {
+      relative = `${diffHours}h ago`;
+    } else if (diffDays === 1) {
+      relative = 'Yesterday';
+    } else if (diffDays < 30) {
+      relative = `${diffDays}d ago`;
+    } else {
+      relative = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    }
+
+    const primary = date.toLocaleString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true
+    });
+
+    return { primary, relative, isRecent };
+  };
+
   const filteredUsers = useMemo(() => {
     return users.filter(u => {
       const matchRole = roleFilter === 'all' || (roleFilter === 'admin' ? u.is_superuser : !u.is_superuser);
@@ -87,7 +127,7 @@ export default function UsersList() {
           <h1 className="text-3xl font-bold text-white flex items-center gap-3">
             <Users className="text-blue-400 w-8 h-8" /> User Accounts & Access Control
           </h1>
-          <p className="text-gray-400 text-sm mt-1">Manage platform credentials, roles, and suspension states.</p>
+          <p className="text-gray-400 text-sm mt-1">Manage platform credentials, roles, login history, and suspension states.</p>
         </div>
       </div>
 
@@ -147,11 +187,12 @@ export default function UsersList() {
           className="bg-white/5 border border-white/10 rounded-2xl overflow-hidden shadow-2xl backdrop-blur-md"
         >
           <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse min-w-[850px]">
+            <table className="w-full text-left border-collapse min-w-[950px]">
               <thead>
                 <tr className="bg-white/10 text-gray-300 text-sm">
                   <th className="p-4 font-semibold">User ID</th>
                   <th className="p-4 font-semibold">Email & Profile</th>
+                  <th className="p-4 font-semibold">Last Logged In</th>
                   <th className="p-4 font-semibold">Account Status</th>
                   <th className="p-4 font-semibold">Access Level</th>
                   <th className="p-4 font-semibold text-right">Administrative Actions</th>
@@ -161,6 +202,7 @@ export default function UsersList() {
                 <AnimatePresence>
                   {filteredUsers.map((user, idx) => {
                     const isSelf = user.id === currentUser?.id;
+                    const loginInfo = formatLoginTime(user.last_login);
                     return (
                       <motion.tr 
                         key={user.id}
@@ -195,6 +237,27 @@ export default function UsersList() {
                             </div>
                           </div>
                         </td>
+
+                        {/* Last Logged In Timestamp Column */}
+                        <td className="p-4">
+                          {user.last_login ? (
+                            <div>
+                              <div className="flex items-center gap-1.5 text-xs font-semibold text-white">
+                                <Clock className={`w-3.5 h-3.5 ${loginInfo.isRecent ? 'text-emerald-400 animate-pulse' : 'text-blue-400'}`} />
+                                <span>{loginInfo.primary}</span>
+                              </div>
+                              <span className={`text-[11px] font-medium ${loginInfo.isRecent ? 'text-emerald-400 font-bold' : 'text-gray-400'}`}>
+                                {loginInfo.relative} {loginInfo.isRecent && '• Active'}
+                              </span>
+                            </div>
+                          ) : (
+                            <div className="flex items-center gap-1.5 text-xs text-gray-500 italic">
+                              <Clock className="w-3.5 h-3.5 text-gray-600" />
+                              <span>Never logged in</span>
+                            </div>
+                          )}
+                        </td>
+
                         <td className="p-4">
                           <span className={`px-3 py-1 rounded-full text-xs font-bold inline-flex items-center gap-1.5 ${
                             user.is_active 
@@ -258,7 +321,7 @@ export default function UsersList() {
                 </AnimatePresence>
                 {filteredUsers.length === 0 && (
                   <tr>
-                    <td colSpan={5} className="p-12 text-center text-gray-400">
+                    <td colSpan={6} className="p-12 text-center text-gray-400">
                       No user accounts found matching your search.
                     </td>
                   </tr>

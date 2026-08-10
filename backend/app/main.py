@@ -21,7 +21,29 @@ import app.models.flight_booking
 import app.models.notification
 import app.models.saved_place
 
+from sqlalchemy import inspect, text
+
 Base.metadata.create_all(bind=engine)
+
+# Safe database migration for last_login column
+try:
+    with engine.connect() as conn:
+        inspector = inspect(engine)
+        if 'user' in inspector.get_table_names():
+            columns = [col['name'] for col in inspector.get_columns('user')]
+            if 'last_login' not in columns:
+                try:
+                    conn.execute(text('ALTER TABLE "user" ADD COLUMN last_login TIMESTAMP WITH TIME ZONE'))
+                    conn.commit()
+                except Exception:
+                    try:
+                        conn.execute(text('ALTER TABLE user ADD COLUMN last_login DATETIME'))
+                        conn.commit()
+                    except Exception:
+                        pass
+except Exception as e:
+    print(f"DB migration check notice: {e}")
+
 
 app = FastAPI(
     title="Voyage AI Backend",

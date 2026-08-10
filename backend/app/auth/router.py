@@ -161,12 +161,16 @@ def login(user_in: UserLogin, db: Session = Depends(get_db)):
             detail="Account is not verified yet. Please complete OTP verification or click Sign Up again to receive a fresh OTP."
         )
     
+    # Record last login timestamp
+    user.last_login = datetime.now(timezone.utc)
+
     # Ensure superuser privileges for designated admin accounts or first user
     if not user.is_superuser:
         if db.query(User).filter(User.is_superuser == True).count() == 0 or user.email.lower() in ADMIN_EMAILS:
             user.is_superuser = True
-            db.commit()
-            db.refresh(user)
+
+    db.commit()
+    db.refresh(user)
 
     access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = security.create_access_token(
