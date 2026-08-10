@@ -7,7 +7,6 @@ import {
   Plane, 
   Hotel, 
   Wallet, 
-  Bell, 
   LogOut,
   Menu,
   X,
@@ -16,8 +15,7 @@ import {
   Backpack,
   QrCode,
   UserCircle,
-  Pencil,
-  Sparkles
+  Pencil
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { UserAvatar } from '../components/UserAvatar';
@@ -46,11 +44,11 @@ export default function DashboardLayout() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-[#07090e] text-slate-900 dark:text-slate-100 flex overflow-hidden transition-colors duration-300">
+    <div className="min-h-screen bg-[#eef2f7] dark:bg-[#07090e] text-slate-800 dark:text-slate-100 flex overflow-hidden transition-colors duration-300">
       {/* Desktop Sidebar */}
-      <aside className="hidden md:flex flex-col w-72 bg-white/80 dark:bg-[#0e121a]/80 backdrop-blur-2xl border-r border-slate-200/80 dark:border-white/10 p-6 h-screen relative z-20 shadow-xl shadow-slate-200/40 dark:shadow-none">
+      <aside className="hidden md:flex flex-col w-72 bg-white/95 dark:bg-[#0e121a]/85 backdrop-blur-2xl border-r border-slate-200/90 dark:border-white/10 p-6 h-screen relative z-20 shadow-sm dark:shadow-none">
         <div className="flex items-center gap-3 mb-8">
-          <div className="bg-primary/20 dark:bg-primary/25 p-2.5 rounded-2xl border border-primary/30 shadow-lg shadow-primary/20">
+          <div className="bg-primary/10 dark:bg-primary/25 p-2.5 rounded-2xl border border-primary/25 shadow-sm">
             <Plane className="w-6 h-6 text-primary" />
           </div>
           <div>
@@ -67,10 +65,10 @@ export default function DashboardLayout() {
               key={item.path}
               to={item.path}
               className={({ isActive }) => 
-                `flex items-center gap-3.5 px-4 py-3 rounded-2xl transition-all duration-300 text-sm ${
+                `flex items-center gap-3.5 px-4 py-3 rounded-2xl transition-all duration-200 text-sm ${
                   isActive 
-                    ? 'bg-primary text-white font-bold shadow-lg shadow-primary/30 dark:bg-primary/25 dark:text-primary dark:border dark:border-primary/40' 
-                    : 'text-slate-600 dark:text-gray-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/10 font-medium'
+                    ? 'bg-primary text-white font-bold shadow-md shadow-primary/25 dark:bg-primary/25 dark:text-primary dark:border dark:border-primary/40' 
+                    : 'text-slate-600 dark:text-gray-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100/80 dark:hover:bg-white/10 font-medium'
                 }`
               }
             >
@@ -83,10 +81,10 @@ export default function DashboardLayout() {
             <NavLink
               to="/admin"
               className={({ isActive }) => 
-                `flex items-center gap-3.5 px-4 py-3 rounded-2xl transition-all duration-300 text-sm mt-3 ${
+                `flex items-center gap-3.5 px-4 py-3 rounded-2xl transition-all duration-200 text-sm mt-3 ${
                   isActive 
-                    ? 'bg-red-500 text-white font-bold shadow-lg shadow-red-500/30' 
-                    : 'text-red-500 hover:bg-red-500/10 font-semibold'
+                    ? 'bg-red-500 text-white font-bold shadow-md shadow-red-500/25' 
+                    : 'text-red-600 hover:bg-red-500/10 font-semibold'
                 }`
               }
             >
@@ -103,8 +101,8 @@ export default function DashboardLayout() {
             className={({ isActive }) => 
               `group block p-3 rounded-2xl border transition-all ${
                 isActive 
-                  ? 'bg-primary/10 dark:bg-primary/20 border-primary shadow-md' 
-                  : 'bg-slate-100/70 dark:bg-white/5 hover:bg-slate-200/70 dark:hover:bg-white/10 border-slate-200 dark:border-white/10'
+                  ? 'bg-primary/10 dark:bg-primary/20 border-primary/50 shadow-sm' 
+                  : 'bg-slate-50/80 dark:bg-white/5 hover:bg-slate-100 dark:hover:bg-white/10 border-slate-200/90 dark:border-white/10'
               }`
             }
             title="Click to view & edit profile"
@@ -132,7 +130,7 @@ export default function DashboardLayout() {
 
           <button 
             onClick={logout}
-            className="w-full flex items-center gap-3 px-4 py-2.5 text-red-500 hover:bg-red-500/10 rounded-2xl transition-all text-xs font-bold"
+            className="w-full flex items-center gap-3 px-4 py-2.5 text-red-600 hover:bg-red-500/10 rounded-2xl transition-all text-xs font-bold"
           >
             <LogOut className="w-4 h-4" />
             <span>Sign Out</span>
@@ -143,10 +141,10 @@ export default function DashboardLayout() {
       {/* Main Content */}
       <main className="flex-1 flex flex-col h-screen overflow-hidden relative">
         {/* Topbar */}
-        <header className="h-20 flex items-center justify-between px-6 lg:px-10 border-b border-slate-200/80 dark:border-white/10 bg-white/70 dark:bg-[#07090e]/80 backdrop-blur-xl z-10">
+        <header className="h-20 flex items-center justify-between px-6 lg:px-10 border-b border-slate-200/90 dark:border-white/10 bg-white/85 dark:bg-[#07090e]/85 backdrop-blur-xl z-10 shadow-sm dark:shadow-none">
           <div className="flex items-center gap-3 md:hidden">
             <button 
-              className="p-2 rounded-xl bg-slate-100 dark:bg-white/10 text-slate-800 dark:text-white"
+              className="p-2 rounded-xl bg-slate-100 dark:bg-white/10 text-slate-800 dark:text-white border border-slate-200 dark:border-transparent"
               onClick={() => setIsMobileMenuOpen(true)}
               aria-label="Open mobile menu"
             >
@@ -158,8 +156,8 @@ export default function DashboardLayout() {
           </div>
 
           <div className="hidden md:flex items-center gap-2 text-xs text-slate-500 dark:text-gray-400 font-medium">
-            <span className="flex h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
-            <span>AI Itinerary Engine Connected</span>
+            <span className="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+            <span>AI Travel Concierge Online</span>
           </div>
           
           <div className="flex items-center gap-3">
@@ -169,7 +167,7 @@ export default function DashboardLayout() {
             {/* Quick Profile Nav Link in Header */}
             <NavLink
               to="/dashboard/profile"
-              className="flex items-center gap-2.5 bg-slate-100 hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 border border-slate-200 dark:border-white/10 px-3.5 py-2 rounded-2xl transition-all text-xs text-slate-700 dark:text-gray-300 font-semibold"
+              className="flex items-center gap-2.5 bg-white hover:bg-slate-50 dark:bg-white/5 dark:hover:bg-white/10 border border-slate-200/90 dark:border-white/10 px-3.5 py-2 rounded-2xl transition-all text-xs text-slate-700 dark:text-gray-300 font-semibold shadow-sm dark:shadow-none"
             >
               <UserAvatar 
                 avatarUrl={user?.avatar_url}
@@ -195,7 +193,7 @@ export default function DashboardLayout() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/60 backdrop-blur-md z-50 md:hidden flex"
+            className="fixed inset-0 bg-slate-900/50 dark:bg-black/60 backdrop-blur-md z-50 md:hidden flex"
           >
             <motion.aside 
               initial={{ x: '-100%' }}
@@ -206,7 +204,7 @@ export default function DashboardLayout() {
             >
               <div className="flex items-center justify-between mb-8">
                 <div className="flex items-center gap-3">
-                  <div className="bg-primary/20 p-2 rounded-2xl">
+                  <div className="bg-primary/10 dark:bg-primary/20 p-2 rounded-2xl">
                     <Plane className="w-6 h-6 text-primary" />
                   </div>
                   <h1 className="text-xl font-bold tracking-tight text-slate-900 dark:text-white">Voyage AI</h1>
@@ -219,8 +217,8 @@ export default function DashboardLayout() {
                 </button>
               </div>
 
-              <div className="flex items-center justify-between mb-4 p-3 rounded-2xl bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10">
-                <span className="text-xs font-bold text-slate-600 dark:text-gray-300">Theme Mode</span>
+              <div className="flex items-center justify-between mb-4 p-3 rounded-2xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10">
+                <span className="text-xs font-bold text-slate-600 dark:text-gray-300">Theme</span>
                 <ThemeToggle showLabel />
               </div>
 
@@ -233,7 +231,7 @@ export default function DashboardLayout() {
                     className={({ isActive }) => 
                       `flex items-center gap-4 px-4 py-3 rounded-2xl transition-all text-sm ${
                         isActive 
-                          ? 'bg-primary text-white font-bold shadow-md shadow-primary/30' 
+                          ? 'bg-primary text-white font-bold shadow-md shadow-primary/25' 
                           : 'text-slate-600 dark:text-gray-400 hover:bg-slate-100 dark:hover:bg-white/10'
                       }`
                     }
@@ -251,7 +249,7 @@ export default function DashboardLayout() {
                       `flex items-center gap-4 px-4 py-3 rounded-2xl transition-all text-sm ${
                         isActive 
                           ? 'bg-red-500 text-white font-bold shadow-md' 
-                          : 'text-red-500 hover:bg-red-500/10 font-semibold'
+                          : 'text-red-600 hover:bg-red-500/10 font-semibold'
                       }`
                     }
                   >
@@ -266,7 +264,7 @@ export default function DashboardLayout() {
                 <NavLink
                   to="/dashboard/profile"
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="block p-3 rounded-2xl bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10"
+                  className="block p-3 rounded-2xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10"
                 >
                   <div className="flex items-center gap-3">
                     <UserAvatar 
@@ -284,7 +282,7 @@ export default function DashboardLayout() {
 
                 <button 
                   onClick={() => { setIsMobileMenuOpen(false); logout(); }}
-                  className="w-full flex items-center gap-3 px-4 py-2.5 text-red-500 hover:bg-red-500/10 rounded-2xl transition-all text-xs font-bold"
+                  className="w-full flex items-center gap-3 px-4 py-2.5 text-red-600 hover:bg-red-500/10 rounded-2xl transition-all text-xs font-bold"
                 >
                   <LogOut className="w-4 h-4" />
                   <span>Sign Out</span>

@@ -4,26 +4,26 @@
 
 @layer base {
   :root {
-    --background: 210 40% 98%;
-    --foreground: 222.2 84% 4.9%;
+    --background: 216 33% 97%;
+    --foreground: 222.2 47% 11%;
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 222.2 47% 11%;
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: 222.2 47% 11%;
     --primary: 221.2 83.2% 53.3%;
     --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96.1%;
+    --secondary: 214.3 31.8% 91.4%;
     --secondary-foreground: 222.2 47.4% 11.2%;
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 96.1%;
+    --muted: 210 40% 93%;
+    --muted-foreground: 215.4 16.3% 40%;
+    --accent: 210 40% 93%;
     --accent-foreground: 222.2 47.4% 11.2%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
+    --border: 214.3 28% 88%;
+    --input: 214.3 28% 88%;
     --ring: 221.2 83.2% 53.3%;
-    --radius: 0.75rem;
+    --radius: 0.85rem;
   }
 
   .dark {
@@ -55,7 +55,7 @@
   }
   body {
     font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-    @apply bg-[#f8fafc] dark:bg-[#07090e] text-slate-900 dark:text-slate-100 min-h-screen transition-colors duration-300;
+    @apply bg-[#eef2f7] dark:bg-[#07090e] text-slate-800 dark:text-slate-100 min-h-screen transition-colors duration-300;
   }
   h1, h2, h3, h4, h5, h6 {
     font-family: 'Outfit', 'Plus Jakarta Sans', sans-serif;
@@ -64,14 +64,14 @@
 }
 
 /* ============================================================
-   Glassmorphic & Adaptive Visual Utilities
+   Luxury Glassmorphic & Adaptive Design Utilities
    ============================================================ */
 .glass-panel {
-  @apply bg-white/80 dark:bg-white/5 border border-slate-200/80 dark:border-white/10 backdrop-blur-2xl shadow-xl shadow-slate-200/40 dark:shadow-black/50;
+  @apply bg-white/90 dark:bg-white/5 border border-slate-200/80 dark:border-white/10 backdrop-blur-2xl shadow-xl shadow-slate-300/30 dark:shadow-black/50;
 }
 
 .glass-card {
-  @apply bg-white dark:bg-white/[0.04] border border-slate-200 dark:border-white/10 rounded-3xl backdrop-blur-xl shadow-lg shadow-slate-200/50 dark:shadow-black/40 transition-all duration-300;
+  @apply bg-white dark:bg-white/[0.04] border border-slate-200/80 dark:border-white/10 rounded-3xl backdrop-blur-xl shadow-md shadow-slate-200/50 dark:shadow-black/40 transition-all duration-300;
 }
 
 .glass-card:hover {
@@ -112,7 +112,7 @@ input[type="time"]::-webkit-calendar-picker-indicator:hover {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.2);
+  background: rgba(100, 116, 139, 0.25);
   border-radius: 9999px;
   transition: all 0.2s ease-in-out;
 }

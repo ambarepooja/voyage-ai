@@ -101,9 +101,9 @@ export default function AdminDashboard() {
       value: stats.users, 
       subtitle: `${stats.activeUsers} Active Accounts`,
       icon: Users, 
-      color: 'from-blue-600/20 to-cyan-500/10 dark:from-blue-600/30 dark:to-cyan-500/20',
-      borderColor: 'border-blue-500/30',
-      iconBg: 'bg-blue-500/20 text-blue-500 dark:text-blue-400',
+      bgTint: 'bg-white dark:bg-white/5',
+      borderColor: 'border-blue-200 dark:border-blue-500/30',
+      iconBg: 'bg-blue-500/10 text-blue-600 dark:bg-blue-500/20 dark:text-blue-400',
       link: '/admin/users'
     },
     { 
@@ -111,9 +111,9 @@ export default function AdminDashboard() {
       value: stats.trips, 
       subtitle: 'Across all travelers',
       icon: Map, 
-      color: 'from-purple-600/20 to-pink-500/10 dark:from-purple-600/30 dark:to-pink-500/20',
-      borderColor: 'border-purple-500/30',
-      iconBg: 'bg-purple-500/20 text-purple-500 dark:text-purple-400',
+      bgTint: 'bg-white dark:bg-white/5',
+      borderColor: 'border-purple-200 dark:border-purple-500/30',
+      iconBg: 'bg-purple-500/10 text-purple-600 dark:bg-purple-500/20 dark:text-purple-400',
       link: '/admin/trips'
     },
     { 
@@ -121,9 +121,9 @@ export default function AdminDashboard() {
       value: stats.flightBookings, 
       subtitle: `${stats.flightBookings} Boarding Passes Issued`,
       icon: Plane, 
-      color: 'from-sky-600/20 to-indigo-500/10 dark:from-sky-600/30 dark:to-indigo-500/20',
-      borderColor: 'border-sky-500/30',
-      iconBg: 'bg-sky-500/20 text-sky-500 dark:text-sky-400',
+      bgTint: 'bg-white dark:bg-white/5',
+      borderColor: 'border-sky-200 dark:border-sky-500/30',
+      iconBg: 'bg-sky-500/10 text-sky-600 dark:bg-sky-500/20 dark:text-sky-400',
       link: '/admin/flights'
     },
     { 
@@ -131,29 +131,29 @@ export default function AdminDashboard() {
       value: stats.hotelBookings, 
       subtitle: `${stats.hotelBookings} Confirmed Stays`,
       icon: Hotel, 
-      color: 'from-amber-600/20 to-orange-500/10 dark:from-amber-600/30 dark:to-orange-500/20',
-      borderColor: 'border-amber-500/30',
-      iconBg: 'bg-amber-500/20 text-amber-500 dark:text-amber-400',
+      bgTint: 'bg-white dark:bg-white/5',
+      borderColor: 'border-amber-200 dark:border-amber-500/30',
+      iconBg: 'bg-amber-500/10 text-amber-600 dark:bg-amber-500/20 dark:text-amber-400',
       link: '/admin/hotels'
     },
   ];
 
   const quickNavs = [
-    { title: 'Manage Users & Permissions', desc: 'Activate, suspend, promote or delete user accounts.', icon: Users, path: '/admin/users', color: 'text-blue-500 dark:text-blue-400' },
-    { title: 'User Trips & Itineraries', desc: 'Create, modify and audit journeys for separate users.', icon: Map, path: '/admin/trips', color: 'text-purple-500 dark:text-purple-400' },
-    { title: 'Commercial Flight Tickets', desc: 'Audit airline tickets, boarding passes, and routes.', icon: Plane, path: '/admin/flights', color: 'text-sky-500 dark:text-sky-400' },
-    { title: 'Hotel Stays & Reservations', desc: 'Review confirmed accommodations and guest reservations.', icon: Hotel, path: '/admin/hotels', color: 'text-amber-500 dark:text-amber-400' },
-    { title: 'User Expenses & Budgets', desc: 'Track spending breakdown and log expenses per user.', icon: CreditCard, path: '/admin/expenses', color: 'text-emerald-500 dark:text-emerald-400' },
-    { title: 'User Contact Profiles', desc: 'Inspect names, emails, and contact details.', icon: UserCheck, path: '/admin/profiles', color: 'text-pink-500 dark:text-pink-400' },
+    { title: 'Manage Users & Permissions', desc: 'Activate, suspend, promote or delete user accounts.', icon: Users, path: '/admin/users', color: 'text-blue-600 dark:text-blue-400', bg: 'bg-blue-500/10' },
+    { title: 'User Trips & Itineraries', desc: 'Create, modify and audit journeys for separate users.', icon: Map, path: '/admin/trips', color: 'text-purple-600 dark:text-purple-400', bg: 'bg-purple-500/10' },
+    { title: 'Commercial Flight Tickets', desc: 'Audit airline tickets, boarding passes, and routes.', icon: Plane, path: '/admin/flights', color: 'text-sky-600 dark:text-sky-400', bg: 'bg-sky-500/10' },
+    { title: 'Hotel Stays & Reservations', desc: 'Review confirmed accommodations and guest reservations.', icon: Hotel, path: '/admin/hotels', color: 'text-amber-600 dark:text-amber-400', bg: 'bg-amber-500/10' },
+    { title: 'User Expenses & Budgets', desc: 'Track spending breakdown and log expenses per user.', icon: CreditCard, path: '/admin/expenses', color: 'text-emerald-600 dark:text-emerald-400', bg: 'bg-emerald-500/10' },
+    { title: 'User Contact Profiles', desc: 'Inspect names, emails, and contact details.', icon: UserCheck, path: '/admin/profiles', color: 'text-pink-600 dark:text-pink-400', bg: 'bg-pink-500/10' },
   ];
 
   return (
-    <div className="space-y-10 pb-12">
+    <div className="space-y-8 pb-12">
       {/* Header */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-slate-200 dark:border-white/10 pb-6">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-slate-200/90 dark:border-white/10 pb-6">
         <div>
           <div className="flex items-center gap-3">
-            <div className="p-2.5 bg-red-500/15 text-red-500 dark:text-red-400 rounded-2xl border border-red-500/30">
+            <div className="p-2.5 bg-red-500/10 text-red-600 dark:bg-red-500/20 dark:text-red-400 rounded-2xl border border-red-500/20">
               <ShieldCheck className="w-6 h-6" />
             </div>
             <h1 className="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">System Control Center</h1>
@@ -164,13 +164,13 @@ export default function AdminDashboard() {
         <div className="flex items-center gap-3">
           <Button 
             onClick={handleExportCSV}
-            className="bg-slate-100 hover:bg-slate-200 dark:bg-white/10 dark:hover:bg-white/20 text-slate-800 dark:text-white border border-slate-200 dark:border-white/15 rounded-2xl px-4 py-2 text-xs font-bold flex items-center gap-1.5"
+            className="bg-white hover:bg-slate-50 dark:bg-white/10 dark:hover:bg-white/20 text-slate-800 dark:text-white border border-slate-200/90 dark:border-white/15 rounded-2xl px-4 py-2 text-xs font-bold flex items-center gap-1.5 shadow-sm dark:shadow-none"
           >
             <Download className="w-4 h-4" /> Export CSV Report
           </Button>
 
-          <div className="flex items-center gap-2 bg-green-500/10 border border-green-500/30 px-4 py-2 rounded-full text-xs font-bold text-green-600 dark:text-green-300">
-            <Activity className="w-4 h-4 animate-pulse text-green-500 dark:text-green-400" /> Real-time Telemetry • Active
+          <div className="flex items-center gap-2 bg-emerald-50 text-emerald-700 dark:bg-green-500/10 dark:text-green-300 border border-emerald-200 dark:border-green-500/30 px-4 py-2 rounded-full text-xs font-bold">
+            <Activity className="w-4 h-4 animate-pulse text-emerald-600 dark:text-green-400" /> Real-time Telemetry • Active
           </div>
         </div>
       </div>
@@ -182,20 +182,20 @@ export default function AdminDashboard() {
             key={stat.title}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: idx * 0.08 }}
+            transition={{ delay: idx * 0.06 }}
             onClick={() => navigate(stat.link)}
-            className={`bg-gradient-to-br ${stat.color} bg-white dark:bg-transparent border ${stat.borderColor} p-6 rounded-3xl backdrop-blur-xl shadow-lg shadow-slate-200/50 dark:shadow-none hover:scale-[1.02] transition-all cursor-pointer relative overflow-hidden group`}
+            className={`${stat.bgTint} border ${stat.borderColor} p-6 rounded-3xl backdrop-blur-xl shadow-sm hover:shadow-md transition-all cursor-pointer relative overflow-hidden group`}
           >
             <div className="flex items-center justify-between mb-4">
-              <div className={`p-3 rounded-2xl ${stat.iconBg} border border-slate-200/40 dark:border-white/10 shadow-sm`}>
+              <div className={`p-3 rounded-2xl ${stat.iconBg} border border-slate-200/50 dark:border-white/10 shadow-sm`}>
                 <stat.icon className="w-6 h-6" />
               </div>
-              <ArrowUpRight className="w-5 h-5 text-slate-400 dark:text-gray-400 group-hover:text-slate-900 dark:group-hover:text-white transition-colors" />
+              <ArrowUpRight className="w-5 h-5 text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white transition-colors" />
             </div>
             
             <p className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-gray-300">{stat.title}</p>
             <p className="text-4xl font-black text-slate-900 dark:text-white mt-1 tracking-tight">{isLoading ? '...' : stat.value}</p>
-            <p className="text-xs text-slate-500 dark:text-gray-300 mt-2 font-medium">{stat.subtitle}</p>
+            <p className="text-xs text-slate-500 dark:text-gray-400 mt-2 font-medium">{stat.subtitle}</p>
           </motion.div>
         ))}
       </div>
@@ -210,12 +210,12 @@ export default function AdminDashboard() {
               key={nav.title}
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 + idx * 0.06 }}
+              transition={{ delay: 0.15 + idx * 0.05 }}
               onClick={() => navigate(nav.path)}
-              className="bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 hover:border-slate-300 dark:hover:border-white/20 p-6 rounded-3xl backdrop-blur-md cursor-pointer group flex justify-between items-center transition-all hover:bg-slate-50 dark:hover:bg-white/10 shadow-lg shadow-slate-200/40 dark:shadow-none"
+              className="bg-white dark:bg-white/5 border border-slate-200/90 dark:border-white/10 hover:border-slate-300 dark:hover:border-white/20 p-6 rounded-3xl backdrop-blur-md cursor-pointer group flex justify-between items-center transition-all hover:shadow-md shadow-sm dark:shadow-none"
             >
               <div className="flex items-start gap-4">
-                <div className="p-3.5 rounded-2xl bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 group-hover:border-primary/40 transition-colors">
+                <div className={`p-3.5 rounded-2xl ${nav.bg} border border-slate-200/40 dark:border-white/10 transition-colors`}>
                   <nav.icon className={`w-6 h-6 ${nav.color}`} />
                 </div>
                 <div>
