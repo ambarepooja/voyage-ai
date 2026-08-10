@@ -360,11 +360,41 @@ def get_all_profiles(
         })
     return result
 
+def cleanup_expired_otps(db: Session):
+    now_utc = datetime.now(timezone.utc)
+    all_otps = db.query(OTP).all()
+    deleted = 0
+    for o in all_otps:
+        is_exp = False
+        if o.expires_at:
+            exp_dt = o.expires_at
+            if exp_dt.tzinfo is None:
+                exp_dt = exp_dt.replace(tzinfo=timezone.utc)
+            if now_utc > exp_dt:
+                is_exp = True
+        elif o.created_at:
+            created_dt = o.created_at
+            if created_dt.tzinfo is None:
+                created_dt = created_dt.replace(tzinfo=timezone.utc)
+            if (now_utc - created_dt).total_seconds() > 600:
+                is_exp = True
+        
+        if is_exp:
+            db.delete(o)
+            deleted += 1
+            
+    if deleted > 0:
+        db.commit()
+    return deleted
+
 @router.get("/otps")
 def get_all_otps(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_superuser)
 ):
+    # Automatically clean up expired OTPs so they are permanently deleted from database and admin logs
+    cleanup_expired_otps(db)
+    
     otps = db.query(OTP).order_by(OTP.id.desc()).all()
     now_utc = datetime.now(timezone.utc)
     
@@ -401,6 +431,28 @@ def get_all_otps(
             "is_expired": is_expired
         })
     return result
+
+@router.delete("/otps/{otp_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_otp(
+    otp_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_superuser)
+):
+    otp = db.query(OTP).filter(OTP.id == otp_id).first()
+    if not otp:
+        raise HTTPException(status_code=404, detail="OTP log not found")
+    db.delete(otp)
+    db.commit()
+    return None
+
+@router.post("/otps/cleanup-expired")
+def cleanup_all_expired_otps_endpoint(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_superuser)
+):
+    deleted_count = cleanup_expired_otps(db)
+    return {"message": f"Successfully purged {deleted_count} expired OTP records."}
+
 
 @router.get("/notifications")
 def get_all_notifications(

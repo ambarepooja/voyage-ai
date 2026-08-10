@@ -19,11 +19,39 @@ from app.utils.email import send_otp_email
 
 router = APIRouter()
 
+def cleanup_expired_otps(db: Session):
+    now_utc = datetime.now(timezone.utc)
+    all_otps = db.query(OTP).all()
+    deleted = 0
+    for o in all_otps:
+        is_exp = False
+        if o.expires_at:
+            exp_dt = o.expires_at
+            if exp_dt.tzinfo is None:
+                exp_dt = exp_dt.replace(tzinfo=timezone.utc)
+            if now_utc > exp_dt:
+                is_exp = True
+        elif o.created_at:
+            created_dt = o.created_at
+            if created_dt.tzinfo is None:
+                created_dt = created_dt.replace(tzinfo=timezone.utc)
+            if (now_utc - created_dt).total_seconds() > 600:
+                is_exp = True
+        
+        if is_exp:
+            db.delete(o)
+            deleted += 1
+            
+    if deleted > 0:
+        db.commit()
+    return deleted
+
 class OTPResendRequest(BaseModel):
     email: str
 
 @router.post("/signup", response_model=UserSchema, status_code=status.HTTP_201_CREATED)
 def signup(user_in: UserCreate, background_tasks: BackgroundTasks, db: Session = Depends(get_db)):
+    cleanup_expired_otps(db)
     clean_phone = user_in.phone_number.strip().replace('+', '').replace('-', '').replace(' ', '')
     if len(clean_phone) != 10 or not clean_phone.isdigit():
         raise HTTPException(status_code=400, detail="Mobile number must be exactly 10 digits.")
@@ -46,9 +74,9 @@ def signup(user_in: UserCreate, background_tasks: BackgroundTasks, db: Session =
     else:
         user = User(
             email=user_in.email,
-            hashed_password=security.get_password_hash(user_in.password),
-            is_active=False,
-        )  # type: ignore
+            hashed_password=security.get_password_hash(user_in.password),  # type: ignore
+            is_active=False
+        )
         db.add(user)
         db.flush() # flush to get user.id
 
@@ -56,7 +84,7 @@ def signup(user_in: UserCreate, background_tasks: BackgroundTasks, db: Session =
             user_id=user.id,
             first_name=user_in.first_name,
             last_name=user_in.last_name,
-            phone_number=user_in.phone_number
+            phone_number=user_in.phone_number,
         )  # type: ignore
         db.add(profile)
     
@@ -88,6 +116,7 @@ def signup(user_in: UserCreate, background_tasks: BackgroundTasks, db: Session =
 
 @router.post("/resend-otp")
 def resend_otp(data: OTPResendRequest, background_tasks: BackgroundTasks, db: Session = Depends(get_db)):
+    cleanup_expired_otps(db)
     user = db.query(User).filter(User.email == data.email).first()
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
@@ -110,6 +139,7 @@ def resend_otp(data: OTPResendRequest, background_tasks: BackgroundTasks, db: Se
 
 @router.post("/verify-otp")
 def verify_otp(otp_data: OTPVerify, db: Session = Depends(get_db)):
+    cleanup_expired_otps(db)
     user = db.query(User).filter(User.email == otp_data.email).first()
     if not user:
         raise HTTPException(status_code=404, detail="User account not found")
@@ -124,7 +154,7 @@ def verify_otp(otp_data: OTPVerify, db: Session = Depends(get_db)):
     ).order_by(OTP.id.desc()).first()
     
     if not otp_entry:
-        raise HTTPException(status_code=400, detail="Invalid OTP verification code entered.")
+        raise HTTPException(status_code=400, detail="Invalid or expired OTP verification code entered.")
         
     now_utc = datetime.now(timezone.utc)
     
@@ -133,17 +163,22 @@ def verify_otp(otp_data: OTPVerify, db: Session = Depends(get_db)):
         if exp.tzinfo is None:
             exp = exp.replace(tzinfo=timezone.utc)
         if now_utc > exp:
-            raise HTTPException(status_code=400, detail="This verification OTP has expired. Please click 'Resend OTP' to receive a fresh code.")
+            db.delete(otp_entry)
+            db.commit()
+            raise HTTPException(status_code=400, detail="This verification OTP has expired and has been removed. Please click 'Resend OTP' to receive a fresh code.")
             
     if otp_entry.created_at is not None:
         created = otp_entry.created_at
         if created.tzinfo is None:
             created = created.replace(tzinfo=timezone.utc)
         if (now_utc - created).total_seconds() > 600:
-            raise HTTPException(status_code=400, detail="This verification OTP has expired (10-minute limit exceeded). Please click 'Resend OTP'.")
+            db.delete(otp_entry)
+            db.commit()
+            raise HTTPException(status_code=400, detail="This verification OTP has expired (10-minute limit exceeded) and has been removed. Please click 'Resend OTP'.")
             
     otp_entry.is_used = True  # type: ignore
     user.is_active = True  # type: ignore
+    user.last_login = datetime.now(timezone.utc)
     db.commit()
     
     return {"message": "Account verified successfully"}
