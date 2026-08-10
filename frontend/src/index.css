@@ -120,3 +120,121 @@ input[type="time"]::-webkit-calendar-picker-indicator:hover {
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(59, 130, 246, 0.7);
 }
+
+/* ============================================================
+   GLOBAL LIGHT-MODE TEXT CONTRAST & READABILITY OVERRIDES
+   When not in .dark mode, ensure all text, headings, cards,
+   tables, and inputs render with dark charcoal/black text.
+   ============================================================ */
+html:not(.dark) {
+  color: #0f172a;
+}
+
+/* Headings in Light Mode */
+html:not(.dark) h1,
+html:not(.dark) h2,
+html:not(.dark) h3,
+html:not(.dark) h4,
+html:not(.dark) h5,
+html:not(.dark) h6 {
+  color: #0f172a !important;
+}
+
+/* Modal windows & surfaces in Light Mode */
+html:not(.dark) .bg-gray-900,
+html:not(.dark) .bg-gray-950,
+html:not(.dark) .bg-slate-900:not(.fixed),
+html:not(.dark) .bg-black:not(.fixed):not(button):not([class*="bg-black/"]):not([class*="text-"]) {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+  border-color: #e2e8f0 !important;
+}
+
+/* Inputs, textareas, and selects in Light Mode */
+html:not(.dark) input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="button"]),
+html:not(.dark) select,
+html:not(.dark) textarea {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+  border-color: #cbd5e1 !important;
+}
+
+html:not(.dark) input::placeholder,
+html:not(.dark) textarea::placeholder {
+  color: #64748b !important;
+}
+
+/* Glassmorphic cards / panels in Light Mode */
+html:not(.dark) .bg-white\/5,
+html:not(.dark) .bg-white\/10 {
+  background-color: #ffffff !important;
+  border-color: #e2e8f0 !important;
+  color: #1e293b !important;
+}
+
+/* Dark transparent containers in Light Mode (chips, currency switchers, search bars) */
+html:not(.dark) .bg-black\/40,
+html:not(.dark) .bg-black\/50,
+html:not(.dark) .bg-black\/60,
+html:not(.dark) .bg-black\/20 {
+  background-color: #f1f5f9 !important;
+  border-color: #cbd5e1 !important;
+  color: #0f172a !important;
+}
+
+/* Override standalone text-white in Light Mode
+   (Keep white text only inside solid colored buttons / badges) */
+html:not(.dark) .text-white:not(button):not(button *):not(.bg-primary):not([class*="bg-primary"]):not([class*="bg-red-"]):not([class*="bg-emerald-"]):not([class*="bg-blue-"]):not([class*="bg-purple-"]):not([class*="bg-indigo-"]):not([class*="bg-amber-"]):not([class*="bg-gradient-"]) {
+  color: #0f172a !important;
+}
+
+/* Text gray classes in Light Mode should be readable slate */
+html:not(.dark) .text-gray-200,
+html:not(.dark) .text-gray-300 {
+  color: #334155 !important;
+}
+
+html:not(.dark) .text-gray-400 {
+  color: #475569 !important;
+}
+
+html:not(.dark) .text-gray-500 {
+  color: #64748b !important;
+}
+
+/* Tables in Light Mode */
+html:not(.dark) table thead tr {
+  background-color: #f1f5f9 !important;
+  color: #334155 !important;
+}
+
+html:not(.dark) table tbody tr {
+  border-color: #e2e8f0 !important;
+  color: #1e293b !important;
+}
+
+html:not(.dark) table tbody tr:hover {
+  background-color: #f8fafc !important;
+}
+
+/* Image overlay cards always maintain white text over dark background images */
+.image-overlay-card,
+.image-overlay-card h3,
+.image-overlay-card p,
+.image-overlay-card span:not(.bg-primary):not(.bg-green-500\/20):not(.bg-purple-500\/30) {
+  color: #ffffff !important;
+}
+
+.image-overlay-card .text-gray-300,
+.image-overlay-card .text-gray-400 {
+  color: #e2e8f0 !important;
+}
+
+.image-overlay-card .text-green-400 {
+  color: #4ade80 !important;
+}
+
+.image-overlay-card .text-primary {
+  color: #60a5fa !important;
+}
+

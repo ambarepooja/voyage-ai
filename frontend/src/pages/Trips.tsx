@@ -165,7 +165,7 @@ const TripCardWithCarousel = ({
       transition={{ delay: idx * 0.08 }}
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
-      className="bg-white/5 border border-white/10 rounded-3xl overflow-hidden relative group cursor-pointer shadow-xl h-[370px] flex flex-col justify-between"
+      className="bg-white/5 border border-white/10 rounded-3xl overflow-hidden relative group cursor-pointer shadow-xl h-[370px] flex flex-col justify-between image-overlay-card"
     >
       {/* Real-time Image Carousel Background */}
       <AnimatePresence mode="wait">
